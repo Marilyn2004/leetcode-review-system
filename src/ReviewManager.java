@@ -15,6 +15,10 @@ public class ReviewManager {
         problems.add(problem);
     }
 
+    public void deleteProblem(Problem problem) {
+        problems.remove(problem);
+    }
+
     public ArrayList<Problem> getProblems() {
         return problems;
     }
@@ -49,5 +53,14 @@ public class ReviewManager {
         if (!found) {
             System.out.println("No problems found with pattern: " + pattern);
         }
+    }
+
+    public Problem findProblemById(int id) {
+        for (Problem problem : problems){
+            if (problem.getId() == id){
+                return problem;
+            }
+        }
+        return null;
     }
 }

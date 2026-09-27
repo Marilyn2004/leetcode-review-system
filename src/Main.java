@@ -8,13 +8,16 @@ public class Main {
         ArrayList<Problem> savedProblems = storageManager.loadProblems();
         ReviewManager manager = new ReviewManager(savedProblems);
         int choice = 0;
-        while (choice != 5) {
+        while (choice != 8) {
             System.out.println("=== LeetCode Review System ===");
             System.out.println("1. Add Problem");
             System.out.println("2. List All Problems");
             System.out.println("3. Search by Difficulty");
             System.out.println("4. Search by Pattern");
-            System.out.println("5. Exit");
+            System.out.println("5. Review a Problem");
+            System.out.println("6. Edit a Problem");
+            System.out.println("7. Delete a Problem");
+            System.out.println("8. Exit");
             System.out.print("Select your choice: ");
             choice = Integer.parseInt(scanner.nextLine());
             if (choice == 1) {
@@ -35,6 +38,46 @@ public class Main {
                 manager.listByPattern(pattern);
             }
             else if (choice == 5){
+                System.out.print("Enter problem ID: ");
+                int id = Integer.parseInt(scanner.nextLine());
+                Problem problem = manager.findProblemById(id);
+                if (problem == null) {
+                    System.out.println("Problem not found.");
+                }
+                else{
+                    problem.markReviewed();
+                    System.out.println("Problem reviewed successfully!");
+                }
+
+            }
+            else if (choice == 6){
+                System.out.print("Enter problem ID: ");
+                int id = Integer.parseInt(scanner.nextLine());
+                Problem problem = manager.findProblemById(id);
+                if (problem == null) {
+                    System.out.println("Problem not found.");
+                }
+                else {
+                    editProblemFromUserInput(scanner, problem);
+                    System.out.println("Problem edited successfully!");
+                }
+
+            }
+
+            else if (choice == 7) {
+                System.out.print("Enter problem ID: ");
+                int id = Integer.parseInt(scanner.nextLine());
+                Problem problem = manager.findProblemById(id);
+                if (problem == null) {
+                    System.out.println("Problem not found.");
+                }
+                else{
+                    manager.deleteProblem(problem);
+                    System.out.println("Problem deleted successfully!");
+                }
+            }
+
+            else if (choice == 8){
                 storageManager.saveProblems(manager.getProblems());
                 System.out.println("Goodbey!");
             }
@@ -66,4 +109,28 @@ public class Main {
 
         return new Problem(id, title, difficulty, pattern, notes, solved);
     }
+
+    private static void editProblemFromUserInput(Scanner scanner, Problem problem) {
+        System.out.print("Enter new title: ");
+        String newTitle = scanner.nextLine();
+        problem.setTitle(newTitle);
+
+        System.out.print("Enter new difficulty: ");
+        String newDifficulty = scanner.nextLine();
+        problem.setDifficulty((newDifficulty));
+
+        System.out.print("Enter new pattern: ");
+        String newPattern = scanner.nextLine();
+        problem.setPattern((newPattern));
+
+        System.out.print("Enter new notes: ");
+        String newNotes = scanner.nextLine();
+        problem.setNotes((newNotes));
+
+        System.out.print("Enter new solved condition: ");
+        boolean newSolved = Boolean.parseBoolean(scanner.nextLine());
+        problem.setSolved((newSolved));
+    }
 }
+
+

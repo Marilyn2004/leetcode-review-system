@@ -36,16 +36,31 @@ public class Problem {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDifficulty() {
         return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 
     public String getPattern() {
         return pattern;
     }
 
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
     public String getNotes() {
         return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public int getTimesReviewed() {
@@ -54,6 +69,10 @@ public class Problem {
 
     public boolean isSolved() {
         return solved;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 
     public void markReviewed() {
