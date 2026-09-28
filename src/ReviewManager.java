@@ -78,4 +78,14 @@ public class ReviewManager {
             System.out.println("No problems need to be reviewed today!");
         }
     }
+
+    public int generateNextId() {
+        int maxId = 0;
+        for (Problem problem : problems){
+            if(problem.getId() > maxId){
+                maxId = problem.getId();
+            }
+        }
+        return maxId+1;
+    }
 }

@@ -20,9 +20,13 @@ public class Main {
             System.out.println("8. Show Problems Should be Reviewed Today");
             System.out.println("9. Exit");
             System.out.print("Select your choice: ");
-            choice = Integer.parseInt(scanner.nextLine());
+            choice = readInt(scanner);
+            if (choice < 1 || choice > 9) {
+                System.out.println("Please enter a number between 1 and 9.");
+                continue;
+            }
             if (choice == 1) {
-                Problem problem = createProblemFromUserInput(scanner);
+                Problem problem = createProblemFromUserInput(scanner, manager);
                 manager.addProblem(problem);
             }
             else if (choice == 2) {
@@ -40,7 +44,7 @@ public class Main {
             }
             else if (choice == 5){
                 System.out.print("Enter problem ID: ");
-                int id = Integer.parseInt(scanner.nextLine());
+                int id = readInt(scanner);
                 Problem problem = manager.findProblemById(id);
                 if (problem == null) {
                     System.out.println("Problem not found.");
@@ -53,7 +57,7 @@ public class Main {
             }
             else if (choice == 6){
                 System.out.print("Enter problem ID: ");
-                int id = Integer.parseInt(scanner.nextLine());
+                int id = readInt(scanner);
                 Problem problem = manager.findProblemById(id);
                 if (problem == null) {
                     System.out.println("Problem not found.");
@@ -66,7 +70,7 @@ public class Main {
             }
             else if (choice == 7) {
                 System.out.print("Enter problem ID: ");
-                int id = Integer.parseInt(scanner.nextLine());
+                int id = readInt(scanner);
                 Problem problem = manager.findProblemById(id);
                 if (problem == null) {
                     System.out.println("Problem not found.");
@@ -79,6 +83,7 @@ public class Main {
             else if (choice == 8){
                 manager.listDueProblems();
             }
+
             else if (choice == 9){
                 storageManager.saveProblems(manager.getProblems());
                 System.out.println("Goodbye!");
@@ -90,15 +95,14 @@ public class Main {
 
     }
 
-    private static Problem createProblemFromUserInput(Scanner scanner) {
-        System.out.print("Enter problem id: ");
-        int id = Integer.parseInt(scanner.nextLine());
+    private static Problem createProblemFromUserInput(Scanner scanner, ReviewManager manager) {
+        int id = manager.generateNextId();
 
         System.out.print("Enter title: ");
         String title = scanner.nextLine();
 
         System.out.print("Enter difficulty: ");
-        String difficulty = scanner.nextLine();
+        String difficulty = readDifficulty(scanner);
 
         System.out.print("Enter pattern: ");
         String pattern = scanner.nextLine();
@@ -107,7 +111,7 @@ public class Main {
         String notes = scanner.nextLine();
 
         System.out.print("Solved? true/false: ");
-        boolean solved = Boolean.parseBoolean(scanner.nextLine());
+        boolean solved = readBoolean(scanner);
 
         return new Problem(id, title, difficulty, pattern, notes, solved);
     }
@@ -118,7 +122,7 @@ public class Main {
         problem.setTitle(newTitle);
 
         System.out.print("Enter new difficulty: ");
-        String newDifficulty = scanner.nextLine();
+        String newDifficulty = readDifficulty(scanner);
         problem.setDifficulty((newDifficulty));
 
         System.out.print("Enter new pattern: ");
@@ -130,8 +134,44 @@ public class Main {
         problem.setNotes((newNotes));
 
         System.out.print("Enter new solved condition: ");
-        boolean newSolved = Boolean.parseBoolean(scanner.nextLine());
+        boolean newSolved = readBoolean(scanner);
         problem.setSolved((newSolved));
+    }
+
+    private static int readInt(Scanner scanner) {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    private static boolean readBoolean(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("true")) {
+                return true;
+            } else if (input.equalsIgnoreCase("false")) {
+                return false;
+            }
+            System.out.println("Invalid input. Please enter true or false.");
+        }
+    }
+
+    private static String readDifficulty(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("Easy")) {
+                return "Easy";
+            } else if (input.equalsIgnoreCase("Medium")) {
+                return "Medium";
+            } else if (input.equalsIgnoreCase("Hard")) {
+                return "Hard";
+            }
+            System.out.println("Invalid difficulty. Please enter Easy, Medium, or Hard.");
+        }
     }
 }
 
