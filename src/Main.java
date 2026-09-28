@@ -8,7 +8,7 @@ public class Main {
         ArrayList<Problem> savedProblems = storageManager.loadProblems();
         ReviewManager manager = new ReviewManager(savedProblems);
         int choice = 0;
-        while (choice != 8) {
+        while (choice != 9) {
             System.out.println("=== LeetCode Review System ===");
             System.out.println("1. Add Problem");
             System.out.println("2. List All Problems");
@@ -17,7 +17,8 @@ public class Main {
             System.out.println("5. Review a Problem");
             System.out.println("6. Edit a Problem");
             System.out.println("7. Delete a Problem");
-            System.out.println("8. Exit");
+            System.out.println("8. Show Problems Should be Reviewed Today");
+            System.out.println("9. Exit");
             System.out.print("Select your choice: ");
             choice = Integer.parseInt(scanner.nextLine());
             if (choice == 1) {
@@ -63,7 +64,6 @@ public class Main {
                 }
 
             }
-
             else if (choice == 7) {
                 System.out.print("Enter problem ID: ");
                 int id = Integer.parseInt(scanner.nextLine());
@@ -76,10 +76,12 @@ public class Main {
                     System.out.println("Problem deleted successfully!");
                 }
             }
-
             else if (choice == 8){
+                manager.listDueProblems();
+            }
+            else if (choice == 9){
                 storageManager.saveProblems(manager.getProblems());
-                System.out.println("Goodbey!");
+                System.out.println("Goodbye!");
             }
             else {
                 System.out.println("Invalid choice. Please try again.");

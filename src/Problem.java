@@ -109,6 +109,9 @@ public class Problem {
 
     }
 
+    public LocalDate getNextReviewDate() {
+        return nextReviewDate;
+    }
 
     public String toFileString() {
         return id + "," + title + "," + difficulty + "," + pattern + "," + notes + "," + timesReviewed + "," + solved + "," +

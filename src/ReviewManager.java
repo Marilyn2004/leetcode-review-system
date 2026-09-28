@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class ReviewManager {
     private ArrayList<Problem> problems;
@@ -62,5 +63,19 @@ public class ReviewManager {
             }
         }
         return null;
+    }
+
+    public void listDueProblems() {
+        LocalDate today = LocalDate.now();
+        boolean found = false;
+        for (Problem problem : problems) {
+            if (problem.getNextReviewDate().isBefore(today) || problem.getNextReviewDate().isEqual(today)) {
+                System.out.println(problem);
+                found = true;
+            }
+        }
+        if(!found){
+            System.out.println("No problems need to be reviewed today!");
+        }
     }
 }
