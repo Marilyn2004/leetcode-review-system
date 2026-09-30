@@ -1,0 +1,116 @@
+package com.ziyi.leetcodereviewsystem;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "problems")
+public class Problem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String title;
+    private String difficulty;
+    private String pattern;
+    private String notes;
+    private int timesReviewed;
+    private boolean solved;
+    private LocalDate lastReviewed;
+    private LocalDate nextReviewDate;
+
+    public Problem(Integer id, String title, String difficulty,
+                   String pattern, String notes, int timesReviewed, boolean solved, LocalDate lastReviewed,
+                   LocalDate nextReviewDate) {
+
+        this.id = id;
+        this.title = title;
+        this.difficulty = difficulty;
+        this.pattern = pattern;
+        this.notes = notes;
+        this.timesReviewed = timesReviewed;
+        this.solved = solved;
+        this.lastReviewed = lastReviewed;
+        this.nextReviewDate = nextReviewDate;
+    }
+
+    public Problem() {
+
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public void setTimesReviewed(int timesReviewed) {
+        this.timesReviewed = timesReviewed;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
+    }
+
+    public void setLastReviewed(LocalDate lastReviewed) {
+        this.lastReviewed = lastReviewed;
+    }
+
+    public void setNextReviewDate(LocalDate nextReviewDate) {
+        this.nextReviewDate = nextReviewDate;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public int getTimesReviewed() {
+        return timesReviewed;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public LocalDate getLastReviewed() {
+        return lastReviewed;
+    }
+
+    public LocalDate getNextReviewDate() {
+        return nextReviewDate;
+    }
+}

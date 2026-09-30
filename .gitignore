@@ -28,3 +28,6 @@ replay_pid*
 
 # Local application data
 problems.csv
+
+# Maven build output
+target/
