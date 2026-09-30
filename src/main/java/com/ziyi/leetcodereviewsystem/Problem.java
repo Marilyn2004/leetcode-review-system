@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 
@@ -14,10 +17,15 @@ public class Problem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotBlank(message = "title must not be blank")
     private String title;
+    @NotBlank(message = "difficulty must not be blank")
+    @Pattern(regexp = "Easy|Medium|Hard", message = "difficulty must be Easy, Medium, or Hard")
     private String difficulty;
+    @NotBlank(message = "pattern must not be blank")
     private String pattern;
     private String notes;
+    @Min(value = 0, message = "timesReviewed must not be negative")
     private int timesReviewed;
     private boolean solved;
     private LocalDate lastReviewed;
@@ -112,5 +120,21 @@ public class Problem {
 
     public LocalDate getNextReviewDate() {
         return nextReviewDate;
+    }
+
+    public void markReviewed() {
+        timesReviewed++;
+        lastReviewed = LocalDate.now();
+        nextReviewDate = lastReviewed.plusDays(intervalDaysForReview(timesReviewed));
+    }
+
+    static long intervalDaysForReview(int reviewNumber) {
+        return switch (reviewNumber) {
+            case 1 -> 1;
+            case 2 -> 3;
+            case 3 -> 7;
+            case 4 -> 14;
+            default -> 30;
+        };
     }
 }

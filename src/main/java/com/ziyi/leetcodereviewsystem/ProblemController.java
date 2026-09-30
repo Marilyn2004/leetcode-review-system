@@ -1,5 +1,7 @@
 package com.ziyi.leetcodereviewsystem;
 
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,12 +14,16 @@ public class ProblemController {
     }
 
     @GetMapping("/problems")
-    public List<Problem> getAllProblems() {
-        return problemService.getAllProblems();
+    public List<Problem> getAllProblems(
+            @RequestParam(required = false) String difficulty,
+            @RequestParam(required = false) String pattern,
+            @RequestParam(required = false) Boolean solved
+    ) {
+        return problemService.getProblems(difficulty, pattern, solved);
     }
 
     @PostMapping("/problems")
-    public Problem addProblem(@RequestBody Problem problem) {
+    public Problem addProblem(@Valid @RequestBody Problem problem) {
         return problemService.addProblem(problem);
     }
 
@@ -27,13 +33,29 @@ public class ProblemController {
     }
 
     @DeleteMapping("/problems/{id}")
-    public boolean deleteProblem(@PathVariable Integer id) {
-        return problemService.deleteProblemById(id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProblem(@PathVariable Integer id) {
+        problemService.deleteProblemById(id);
     }
 
     @PutMapping("/problems/{id}")
-    public Problem updateProblem(@PathVariable Integer id, @RequestBody Problem problem) {
+    public Problem updateProblem(@PathVariable Integer id, @Valid @RequestBody Problem problem) {
         return problemService.updateProblem(id, problem);
+    }
+
+    @PostMapping("/problems/{id}/review")
+    public Problem markReviewed(@PathVariable Integer id) {
+        return problemService.markReviewed(id);
+    }
+
+    @GetMapping("/problems/{id}/reviews")
+    public List<ReviewSession> getReviewHistory(@PathVariable Integer id) {
+        return problemService.getReviewHistory(id);
+    }
+
+    @GetMapping("/problems/due")
+    public List<Problem> getDueProblems() {
+        return problemService.getDueProblems();
     }
 
 }

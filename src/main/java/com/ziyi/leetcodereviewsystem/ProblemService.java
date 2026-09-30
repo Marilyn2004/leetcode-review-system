@@ -3,19 +3,25 @@ package com.ziyi.leetcodereviewsystem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class ProblemService {
     private final ProblemRepository problemRepository;
+    private final ReviewSessionRepository reviewSessionRepository;
 
-    public ProblemService(ProblemRepository problemRepository) {
+    public ProblemService(ProblemRepository problemRepository, ReviewSessionRepository reviewSessionRepository) {
         this.problemRepository = problemRepository;
+        this.reviewSessionRepository = reviewSessionRepository;
     }
 
-    public List<Problem> getAllProblems() {
-        return problemRepository.findAll();
+    public List<Problem> getProblems(String difficulty, String pattern, Boolean solved) {
+        return problemRepository.findFiltered(difficulty, pattern, solved);
     }
 
     public Problem addProblem(Problem problem) {
@@ -23,22 +29,19 @@ public class ProblemService {
     }
 
     public Problem findProblemById(Integer id) {
-        return problemRepository.findById(id).orElse(null);
+        return problemRepository.findById(id)
+                .orElseThrow(() -> new ProblemNotFoundException(id));
     }
 
-    public boolean deleteProblemById(Integer id) {
+    public void deleteProblemById(Integer id) {
         if (!problemRepository.existsById(id)) {
-            return false;
+            throw new ProblemNotFoundException(id);
         }
         problemRepository.deleteById(id);
-        return true;
     }
 
     public Problem updateProblem(Integer id, Problem updatedProblem) {
         Problem existing = findProblemById(id);
-        if (existing == null) {
-            return null;
-        }
         existing.setTitle(updatedProblem.getTitle());
         existing.setDifficulty(updatedProblem.getDifficulty());
         existing.setPattern(updatedProblem.getPattern());
@@ -50,4 +53,50 @@ public class ProblemService {
         return problemRepository.save(existing);
     }
 
+    public Problem markReviewed(Integer id) {
+        Problem problem = findProblemById(id);
+        problem.markReviewed();
+        Problem saved = problemRepository.save(problem);
+        reviewSessionRepository.save(new ReviewSession(saved, LocalDateTime.now(), saved.getNextReviewDate()));
+        return saved;
+    }
+
+    public List<ReviewSession> getReviewHistory(Integer id) {
+        findProblemById(id);
+        return reviewSessionRepository.findByProblemIdOrderByReviewedAtAscIdAsc(id);
+    }
+
+    public List<Problem> getDueProblems() {
+        return problemRepository.findByNextReviewDateLessThanEqualOrderByNextReviewDateAsc(LocalDate.now());
+    }
+
+    public StatsResponse getStats() {
+        LocalDate today = LocalDate.now();
+        Map<String, Long> difficultyBreakdown = new LinkedHashMap<>();
+        difficultyBreakdown.put("Easy", 0L);
+        difficultyBreakdown.put("Medium", 0L);
+        difficultyBreakdown.put("Hard", 0L);
+        putCounts(difficultyBreakdown, problemRepository.countGroupedByDifficulty());
+
+        Map<String, Long> patternBreakdown = new LinkedHashMap<>();
+        putCounts(patternBreakdown, problemRepository.countGroupedByPattern());
+
+        return new StatsResponse(
+                problemRepository.count(),
+                problemRepository.countBySolved(true),
+                problemRepository.countByNextReviewDateLessThanEqual(today),
+                problemRepository.sumTimesReviewed(),
+                difficultyBreakdown,
+                patternBreakdown
+        );
+    }
+
+    private static void putCounts(Map<String, Long> target, List<Object[]> rows) {
+        for (Object[] row : rows) {
+            if (row[0] == null) {
+                continue;
+            }
+            target.put((String) row[0], ((Number) row[1]).longValue());
+        }
+    }
 }
