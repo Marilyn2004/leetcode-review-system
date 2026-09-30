@@ -2,6 +2,18 @@
 
 A Spring Boot REST backend for tracking LeetCode problems and scheduling spaced-repetition reviews. It persists problems and review history in PostgreSQL and exposes APIs for CRUD, due-review queues, filtering, and learning statistics.
 
+## Live Deployment
+
+The API is deployed on [Railway](https://railway.app) at:
+
+**https://leetcode-review-system-production.up.railway.app**
+
+Production uses a Railway-hosted PostgreSQL instance. Example:
+
+```bash
+curl -s https://leetcode-review-system-production.up.railway.app/problems
+```
+
 ## Features
 
 - Problem CRUD over HTTP
