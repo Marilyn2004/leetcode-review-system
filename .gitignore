@@ -31,3 +31,5 @@ problems.csv
 
 # Maven build output
 target/
+
+.DS_Store

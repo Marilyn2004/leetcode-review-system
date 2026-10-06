@@ -1,0 +1,13 @@
+platform	externalProblemId	title	slug	difficulty	url	legacyPattern	patterns
+LEETCODE	1	Two Sum	two-sum	Easy	https://leetcode.com/problems/two-sum/	Arrays & Hashing	hash-table:Hash Table;arrays:Arrays
+LEETCODE	3	Longest Substring Without Repeating Characters	longest-substring-without-repeating-characters	Medium	https://leetcode.com/problems/longest-substring-without-repeating-characters/	Sliding Window	sliding-window:Sliding Window;hash-table:Hash Table
+LEETCODE	15	3Sum	3sum	Medium	https://leetcode.com/problems/3sum/	Two Pointers	two-pointers:Two Pointers;arrays:Arrays
+LEETCODE	70	Climbing Stairs	climbing-stairs	Easy	https://leetcode.com/problems/climbing-stairs/	1-D Dynamic Programming	dynamic-programming:Dynamic Programming
+LEETCODE	78	Subsets	subsets	Medium	https://leetcode.com/problems/subsets/	Backtracking	backtracking:Backtracking
+LEETCODE	102	Binary Tree Level Order Traversal	binary-tree-level-order-traversal	Medium	https://leetcode.com/problems/binary-tree-level-order-traversal/	Trees	bfs:BFS
+LEETCODE	125	Valid Palindrome	valid-palindrome	Easy	https://leetcode.com/problems/valid-palindrome/	Two Pointers	two-pointers:Two Pointers
+LEETCODE	200	Number of Islands	number-of-islands	Medium	https://leetcode.com/problems/number-of-islands/	Graphs	dfs:DFS;bfs:BFS
+LEETCODE	217	Contains Duplicate	contains-duplicate	Easy	https://leetcode.com/problems/contains-duplicate/	Arrays & Hashing	hash-table:Hash Table;arrays:Arrays
+LEETCODE	239	Sliding Window Maximum	sliding-window-maximum	Hard	https://leetcode.com/problems/sliding-window-maximum/	Sliding Window	heap-priority-queue:Heap / Priority Queue;sliding-window:Sliding Window
+LEETCODE	303	Range Sum Query - Immutable	range-sum-query-immutable	Easy	https://leetcode.com/problems/range-sum-query-immutable/	Arrays & Hashing	prefix-sum:Prefix Sum
+LEETCODE	704	Binary Search	binary-search	Easy	https://leetcode.com/problems/binary-search/	Binary Search	binary-search:Binary Search

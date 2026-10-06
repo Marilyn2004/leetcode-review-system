@@ -25,7 +25,11 @@ public class ProblemService {
     }
 
     public Problem addProblem(Problem problem) {
-        return problemRepository.save(problem);
+        // Never merge a request entity, even when a client supplies an existing ID.
+        Problem created = new Problem(null, problem.getTitle(), problem.getDifficulty(),
+                problem.getPattern(), problem.getNotes(), problem.getTimesReviewed(),
+                problem.isSolved(), problem.getLastReviewed(), problem.getNextReviewDate());
+        return problemRepository.save(created);
     }
 
     public Problem findProblemById(Integer id) {

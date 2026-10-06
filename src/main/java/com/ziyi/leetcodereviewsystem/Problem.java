@@ -1,18 +1,19 @@
 package com.ziyi.leetcodereviewsystem;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "problems")
+@Table(name = "problems", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_problem_platform_external", columnNames = {"platform", "external_problem_id"}),
+        @UniqueConstraint(name = "uk_problem_platform_slug", columnNames = {"platform", "slug"})
+})
 public class Problem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +21,7 @@ public class Problem {
     @NotBlank(message = "title must not be blank")
     private String title;
     @NotBlank(message = "difficulty must not be blank")
-    @Pattern(regexp = "Easy|Medium|Hard", message = "difficulty must be Easy, Medium, or Hard")
+    @jakarta.validation.constraints.Pattern(regexp = "Easy|Medium|Hard", message = "difficulty must be Easy, Medium, or Hard")
     private String difficulty;
     @NotBlank(message = "pattern must not be blank")
     private String pattern;
@@ -30,6 +31,39 @@ public class Problem {
     private boolean solved;
     private LocalDate lastReviewed;
     private LocalDate nextReviewDate;
+
+    // Catalog metadata is hidden from the legacy V1 entity JSON contract.
+    @JsonIgnore
+    private String platform;
+    @JsonIgnore
+    @Column(name = "external_problem_id")
+    private String externalProblemId;
+    @JsonIgnore
+    private String slug;
+    @JsonIgnore
+    private String url;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "problem_patterns",
+            joinColumns = @JoinColumn(name = "problem_id"),
+            inverseJoinColumns = @JoinColumn(name = "pattern_id"),
+            uniqueConstraints = @UniqueConstraint(name = "uk_problem_pattern", columnNames = {"problem_id", "pattern_id"}))
+    private Set<Pattern> patterns = new LinkedHashSet<>();
+
+    @JsonIgnore
+    public String getPlatform() { return platform; }
+    public void setPlatform(String platform) { this.platform = platform; }
+    @JsonIgnore
+    public String getExternalProblemId() { return externalProblemId; }
+    public void setExternalProblemId(String externalProblemId) { this.externalProblemId = externalProblemId; }
+    @JsonIgnore
+    public String getSlug() { return slug; }
+    public void setSlug(String slug) { this.slug = slug; }
+    @JsonIgnore
+    public String getUrl() { return url; }
+    public void setUrl(String url) { this.url = url; }
+    @JsonIgnore
+    public Set<Pattern> getPatterns() { return patterns; }
 
     public Problem(Integer id, String title, String difficulty,
                    String pattern, String notes, int timesReviewed, boolean solved, LocalDate lastReviewed,

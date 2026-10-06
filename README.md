@@ -300,3 +300,13 @@ Not implemented:
 - Natural-language LeetCode coaching and structured intent extraction from user messages
 - Personalized study / review planning beyond the current interval table
 - Optional client or frontend
+
+## V2 Catalog Foundation (local/test only)
+
+Milestone 1 adds a 12-problem curated metadata catalog and persisted many-to-many patterns.
+Read-only APIs: `GET /catalog/problems`, `GET /catalog/problems/{id}`, and `GET /catalog/patterns`.
+The list accepts optional `difficulty` and canonical pattern-slug filters. Existing V1 APIs remain unchanged.
+
+Catalog loading is opt-in and disabled by default. See [catalog documentation](docs/CATALOG.md) for
+source/license attribution, local loading, compatibility, and dedicated PostgreSQL test setup.
+This milestone is not deployed to Railway; production migration and rollout remain deferred.

@@ -34,4 +34,25 @@ public interface ProblemRepository extends JpaRepository<Problem, Integer> {
 
     @Query("SELECT p.pattern, COUNT(p) FROM Problem p GROUP BY p.pattern")
     List<Object[]> countGroupedByPattern();
+    @Query("""
+            SELECT DISTINCT p FROM Problem p LEFT JOIN FETCH p.patterns
+            WHERE p.platform IS NOT NULL AND p.externalProblemId IS NOT NULL
+              AND p.slug IS NOT NULL AND p.url IS NOT NULL
+              AND (:difficulty IS NULL OR p.difficulty = :difficulty)
+              AND (:pattern IS NULL OR EXISTS (
+                  SELECT matching.id FROM Problem candidate JOIN candidate.patterns matching
+                  WHERE candidate.id = p.id AND matching.slug = :pattern))
+            ORDER BY p.id ASC
+            """)
+    List<Problem> findCatalog(@Param("difficulty") String difficulty, @Param("pattern") String pattern);
+
+    @Query("""
+            SELECT p FROM Problem p LEFT JOIN FETCH p.patterns
+            WHERE p.id = :id AND p.platform IS NOT NULL AND p.externalProblemId IS NOT NULL
+              AND p.slug IS NOT NULL AND p.url IS NOT NULL
+            """)
+    java.util.Optional<Problem> findCatalogById(@Param("id") Integer id);
+
+    java.util.Optional<Problem> findByPlatformAndExternalProblemId(String platform, String externalProblemId);
+    java.util.Optional<Problem> findByPlatformAndSlug(String platform, String slug);
 }

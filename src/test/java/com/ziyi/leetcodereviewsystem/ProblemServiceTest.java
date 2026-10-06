@@ -269,4 +269,23 @@ class ProblemServiceTest {
         assertThrows(ProblemNotFoundException.class, () -> problemService.getReviewHistory(999));
         verify(reviewSessionRepository, never()).findByProblemIdOrderByReviewedAtAscIdAsc(any());
     }
+
+    @Test void addProblemCopiesOnlyLegacyFieldsIntoFreshEntity() {
+        Problem request = new Problem(123, "New", "Easy", "Legacy", "notes", 2, true,
+                LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 8));
+        request.setPlatform("LEETCODE"); request.setExternalProblemId("1");
+        request.setSlug("two-sum"); request.setUrl("https://leetcode.com/problems/two-sum/");
+        request.getPatterns().add(new Pattern("hash-table", "Hash Table"));
+        when(problemRepository.save(any(Problem.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Problem created = problemService.addProblem(request);
+        assertNotSame(request, created); assertNull(created.getId()); assertEquals(123, request.getId());
+        assertEquals("New", created.getTitle()); assertEquals("Easy", created.getDifficulty());
+        assertEquals("Legacy", created.getPattern()); assertEquals("notes", created.getNotes());
+        assertEquals(2, created.getTimesReviewed()); assertTrue(created.isSolved());
+        assertEquals(request.getLastReviewed(), created.getLastReviewed());
+        assertEquals(request.getNextReviewDate(), created.getNextReviewDate());
+        assertNull(created.getPlatform()); assertNull(created.getExternalProblemId());
+        assertNull(created.getSlug()); assertNull(created.getUrl()); assertTrue(created.getPatterns().isEmpty());
+        verify(problemRepository).save(created);
+    }
 }
